@@ -46,7 +46,7 @@ def yelp_ER():
         df_restaurants['categories'] = 'restaurants'
         categorias_new_data = pd.concat([categorias_new_data,df_restaurant])
         categorias_new_data = pd.concat([categorias_new_data,df_restaurants])
-        
+        print(categorias_new_data.columns)
         
         
         categorias_new = categorias_new_data[~(categorias_new_data['categories'].isin(categories_origen['name']))] # Selecciono las categorias que no estan en la DB
@@ -113,8 +113,8 @@ def yelp_review_ER():
     """
     review_new_data = pd.read_parquet('./datalake/reviews_yelp_transform.parquet') # Hago las trasnformaciones sobre el dataframe.
     reviews_yelp_origen = get_table('reviews_yelp') # Consulto la tabla de review_yelp de la base de datos mysql.
-    users_old = get_filtered_table('user_yelp',list(review_new_data['user_id'].unique().values)) # Consulto la tabla de users.
-    
+    users_old = get_filtered_table('user_yelp',list(review_new_data['user_id'].unique())) # Consulto la tabla de users.
+
     
     #Filtro solo las reviews donde su columna date sea mayor a la maxima existente en la base de datos.
     print(f'{review_new_data.shape[0]} reviews a ingestar')

@@ -6,7 +6,7 @@ import sys
 import random
 from mysql_connection import *
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
-api_key_yelp =  os.getenv("API_KEY_YELP") # Cargo la variable de entorno
+api_key_yelp =  "Ln6gcw24qn2x3RFJn0D89tGTBCRfrrpRrXqEp7y8fsaDFd2yjf7byiYcDirTF0VNr-bgsPE_kZPRqY0mpv7pXVd5KuVpzQC8cX5NzywiwBH1djTKvzQqNumm83JkZXYx" # Cargo la variable de entorno
 
 
 # Funcion que consulta la API de yelp para obtener los locales por estado.    

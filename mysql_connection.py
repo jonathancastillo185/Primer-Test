@@ -5,7 +5,7 @@ import os
 
 ## Cargo las variables de entorno
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
-mysql_key = os.getenv("KEY_MYSQL")
+mysql_key = '1533542415'
 ##################  MYSQL   ##################
 def get_connection_mysql():
     """
@@ -81,8 +81,8 @@ def get_filtered_table(table_name, id_list):
     try:
         # Iniciar conexión a MySQL
         cursor = conexion.cursor()
-        consulta = f"SELECT * FROM {table_name} WHERE user_id IN ({id_string})"
-        cursor.execute(consulta)
+        consulta = f"SELECT * FROM {table_name} WHERE user_id IN (%s)"
+        cursor.executemany(consulta,id_list)
         
         # Obtener los resultados de la consulta
         resultados = cursor.fetchall()
