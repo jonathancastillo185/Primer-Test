@@ -43,7 +43,7 @@ def transform_business():
     
     
     if yelp_bussines is not None and 'categories' in yelp_bussines.columns:
-        yelp_bussines['categories'] = yelp_bussines['categories'].apply(lambda x: [item['title'] for item in x] if isinstance(x, list) else [])
+        yelp_bussines['categories'] = yelp_bussines['categories'].apply(lambda x: [item['title'] for item in x])
         yelp_bussines['location.state'] = yelp_bussines['location.state'].apply(state_normalize)
 
         yelp_bussines.rename(columns={

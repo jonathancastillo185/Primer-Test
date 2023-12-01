@@ -1,9 +1,6 @@
 import pandas as pd
-
 from mysql_connection import *
 from transform_API import get_categories
-
-    
 
 def yelp_ER():
     
@@ -19,6 +16,7 @@ def yelp_ER():
     """
     
     yelp_new_data = pd.read_parquet('./datalake/business_trasnform.parquet') # Realizo las trasnformaciones necesarias para que los datos esten limpios
+
     yelp_origen = get_table('business_yelp') # Cargo de la base de datos la tabla de yelp en un dataframe
     
     yelp_new_data = yelp_new_data[~(yelp_new_data['business_id'].isin(yelp_origen['business_id']))] #De los restaurantes extraidos tomo solo los que su id NO esta en la DB
@@ -37,6 +35,9 @@ def yelp_ER():
         categories_origen = get_table('categories') # Cargo la tabla de categorias de la base de datos.    
         max_id = categories_origen['categories_id']
         categorias_new_data = get_categories(yelp_new_data.copy())
+        
+        categorias_new_data['categories'] = categorias_new_data['categories'].apply(lambda x: x.lower())
+
         #Agrego la categoria Restaurants a cada local
         
         df_restaurant = categorias_new_data.drop_duplicates(subset='business_id').copy()
@@ -97,10 +98,8 @@ def yelp_ER():
     
 #------------------------------------------------------------------------      
 #----------------------------REVIEWS-------------------------------------    
-#------------------------------------------------------------------------     
+#------------------------------------------------------------------------  #
 
-
-    
 def yelp_review_ER():
     """
         Esta funcion realiza el proceso de ETL completo respecto de la API de yelp para las reviews de restaurantes y las sube en la base datos mysql.
@@ -111,47 +110,65 @@ def yelp_review_ER():
             * mysql_get_connection
     
     """
-    review_new_data = pd.read_parquet('./datalake/reviews_yelp_transform.parquet') # Hago las trasnformaciones sobre el dataframe.
-    reviews_yelp_origen = get_table('reviews_yelp') # Consulto la tabla de review_yelp de la base de datos mysql.
-    users_old = get_filtered_table('user_yelp',list(review_new_data['user_id'].unique())) # Consulto la tabla de users.
-
     
+    review_new_data = pd.read_parquet('./datalake/reviews_yelp_transform.parquet') # Hago las trasnformaciones sobre el dataframe.
+    
+    reviews_yelp_origen = get_review_yelp('reviews_yelp') # Consulto la tabla las ultimas resenas
+
+    users_old = get_filtered_table('user_yelp', review_new_data['user_id'].unique().tolist())
+    
+
+
+    print(users_old.shape[0])
     #Filtro solo las reviews donde su columna date sea mayor a la maxima existente en la base de datos.
     print(f'{review_new_data.shape[0]} reviews a ingestar')
     
-    review_new_data = review_new_data[
-    (pd.to_datetime(reviews_yelp_origen['date']).max() < pd.to_datetime(review_new_data['date'])) &
-    (~review_new_data['review_id'].isin(reviews_yelp_origen['review_id']))
-    ]
-    
+    review_new_data = review_new_data[(~review_new_data['review_id'].isin(reviews_yelp_origen['review_id']))]
+    review_new_data['date'] = pd.to_datetime(review_new_data['date'])
+
     
     #### USERS ####  
-    
-    
-    users = review_new_data.groupby('user_id').agg({
-        'name':'first',
-        'date':'min',
-        'review_id':'count',
-        'stars':'mean'
-        
-    }).reset_index().rename(columns={'date': 'creation','review_id':'review_count'})
-    
+    print(review_new_data.info())
+
+    grouped_data = review_new_data.groupby('user_id') # Rrealizo el agrupamiento por usuarios y calculas las metricas.
+    min_dates = grouped_data['date'].min()
+    first_names = grouped_data['name'].first()
+    review_counts = grouped_data['review_id'].count()
+    mean_stars = grouped_data['stars'].mean()
+    users = pd.DataFrame({
+        'name': first_names,
+        'creation': min_dates,
+        'review_count': review_counts,
+        'stars': mean_stars
+    }).reset_index()
+    users['influence'] = 0
+    users = users[['user_id','name','creation','review_count','influence','stars']]
     #### DATAFRAME CON LOS USUARIOS NUEVOS
     new_users = users[~(users['user_id'].isin(users_old['user_id']))]
     new_users['influence'] = 0
     
     
      #### DATAFRAME CON LOS USUARIOS EXISTENTES
-    exist_user = users[(users['user_id'].isin(users_old['user_id']))] # Usuarios existentes
-    exist_user = pd.concat([exist_user, users[['user_id', 'name', 'creation', 'review_count', 'stars']]]) # Hago un merge de los usuarios de la BD y la llegada
+    #exist_user = users[(users['user_id'].isin(users_old['user_id']))] # Usuarios existentes
+    
+    
+    exist_user = pd.concat([users_old, users[users['user_id'].isin(users_old['user_id'])]]) # Hago un merge de los usuarios de la BD y la llegada
     # Para los nuevos usuarios encuentro la nueva review_count y stars
-    exist_user = exist_user.groupby('user_id').agg({
-        'name':'first',
-        'creation':'min',
-        'review_count':'count',
-        'stars':'mean'
-        
+    exist_user['stars'] = exist_user['stars'].astype('float')
+    # Realizo el agrupamiento por usuarios existentes y calculo las metricas.
+    grouped_data = exist_user.groupby('user_id')
+    min_dates = grouped_data['creation'].min()
+    first_names = grouped_data['name'].first()
+    review_counts = grouped_data['review_count'].count()
+    mean_stars = grouped_data['stars'].mean()
+    exist_user = pd.DataFrame({
+        'name': first_names,
+        'creation': min_dates,
+        'review_count': review_counts,
+        'stars': mean_stars
     }).reset_index()
+    
+    print(exist_user)
     
     if not exist_user.empty:
         try:
@@ -191,12 +208,14 @@ def yelp_review_ER():
     #### REVIEWS #####
     
     
-    print("Datos a insertar:", review_new_data.drop(columns=['name']).columns)
+    #print("Datos a insertar:", review_new_data.drop(columns=['name']).columns)
+    print(review_new_data)
     try:
         conexion= get_connection_mysql()
         cursor = conexion.cursor()
         consulta = "INSERT INTO reviews_yelp  VALUES(%s,%s,%s,%s,%s,%s)"
         cursor.executemany(consulta,review_new_data.drop(columns=['name']).values.tolist() )
+        print(f'{review_new_data.shape[0]} nuevas reviews')
         conexion.commit()
         conexion.close()
     except Exception as e:
@@ -210,7 +229,5 @@ def yelp_review_ER():
             conexion.close()
             
             
-
-
 yelp_ER()
 yelp_review_ER()

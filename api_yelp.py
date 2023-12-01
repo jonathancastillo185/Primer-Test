@@ -126,8 +126,6 @@ def get_reviewsYelp_API():
             reviews_business = pd.concat([reviews,reviews_business])
             
             
-            
-            
         else :
             reviews_business.to_parquet('./datalake/reviews_yelp.parquet')
             return 'Extraccón realizada'
