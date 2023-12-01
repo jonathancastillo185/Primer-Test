@@ -135,9 +135,14 @@ def yelp_ER():
         
         
         categorias_new = categorias_new_data[~(categorias_new_data['categories'].isin(categories_origen['name']))] # Selecciono las categorias que no estan en la DB
-        categorias_new['categories_id'] = range(max_id + 1,max_id + 1 +categorias_new.shape[0] )
+        
+        
+        categorias_new['categories_id'] = list(range(max_id + 1,max_id + 1 +categorias_new.shape[0] ))
+        
+        
+        
         categories = categorias_new.drop_duplicates(subset='categories')['categories'].copy() # Elimino las categorias duplicadas y las convierto en lista de listas.
-        conexion = get_connection_mysql() 
+        conexion = get_connection_mysql()
         cursor = conexion.cursor()
         
         # Ingesto las nuevas categorias.
