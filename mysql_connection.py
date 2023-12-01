@@ -56,4 +56,48 @@ def get_table(table_name):
         cursor.close()
     return df
 
+
+
+
+def get_filtered_table(table_name, id_list):
+    """
+    Esta función aplica la función mysql_get_connection y devuelve una tabla de la base de datos
+    en formato DataFrame de Pandas, filtrada por una lista de IDs.
+
+    Args:
+        table_name (string): Nombre de la tabla requerida en la base de datos.
+        id_list (list): Lista de IDs para filtrar la tabla.
+
+    Returns:
+        pd.DataFrame: DataFrame de la tabla table_name filtrada por los IDs proporcionados.
+    """
+    if not id_list:
+        return pd.DataFrame()  # Si la lista de IDs está vacía, retorna un DataFrame vacío
+    
+    # Convertir la lista de IDs en un string separado por comas para usar en el query SQL
+    id_string = ','.join(map(str, id_list))
+
+    conexion = get_connection_mysql()
+    try:
+        # Iniciar conexión a MySQL
+        cursor = conexion.cursor()
+        consulta = f"SELECT * FROM {table_name} WHERE user_id IN ({id_string})"
+        cursor.execute(consulta)
+        
+        # Obtener los resultados de la consulta
+        resultados = cursor.fetchall()
+        
+        # Obtener los nombres de las columnas
+        columnas = [columna[0] for columna in cursor.description]
+        
+        # Crear un DataFrame de Pandas con los resultados y los nombres de las columnas
+        df = pd.DataFrame(resultados, columns=columnas)
+    except Exception as e:
+        print(f"Error: {e}")
+        df = pd.DataFrame()  # Retorna un DataFrame vacío en caso de error
+    finally:
+        # Cerrar la conexión a MySQL en cualquier caso
+        cursor.close()
+    return df
+
 ##################  MYSQL   ##################
