@@ -7,7 +7,6 @@ import nltk
 ##### BUSINES ######
 
 from mysql_connection import * # Función para conectarme a la base de datos mysql
-from api_yelp import *  # Función para realizar consultas a la API
 
 nltk.download('vader_lexicon')
 
