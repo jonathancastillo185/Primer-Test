@@ -129,10 +129,10 @@ def get_reviewsYelp_API():
             
             
         else :
-            reviews_business.to_parquet('/datalake/reviews_yelp.parquet')
+            reviews_business.to_parquet('./datalake/reviews_yelp.parquet')
             return 'Extraccón realizada'
     
-    reviews_business.to_parquet('/datalake/reviews_yelp.parquet')
+    reviews_business.to_parquet('./datalake/reviews_yelp.parquet')
     return 'Extraccón realizada'
 
 
