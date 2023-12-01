@@ -6,7 +6,7 @@ import sys
 import random
 from mysql_connection import *
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
-api_key_yelp =  'r2fFu3zbQTJdGZp8Vobz7-xTeZuyZu__5Ga5FuwizG4WUajqNiXc--pRNprFdmci4CIeNVWY733JE51HKrJQ4_GRcPOxShSWFh3sRc5ZfTJ5bAkGktEDY5RD_7VnZXYx' # Cargo la variable de entorno
+api_key_yelp =  os.getenv("API_KEY_YELP") # Cargo la variable de entorno
 
 
 # Funcion que consulta la API de yelp para obtener los locales por estado.    
@@ -64,7 +64,7 @@ def extract_businesses():
     for state in ['CA','FL','NJ','IL']:
         businesses = get_business_API(state)
         yelp_bussines = pd.concat([businesses,yelp_bussines])
-    return yelp_bussines
+    yelp_bussines.to_parquet('./datalake/business_API.parquet')
 
 
 
@@ -119,7 +119,7 @@ def get_reviewsYelp_API():
     iter = 0
     for business_id in business_ids_distinct_list:
         if business_id is None: continue
-        if iter <= 20:
+        if iter <= 400:
             iter += 1
             reviews = reviews_yelp_API(business_id)
             reviews['business_id'] = business_id
@@ -129,6 +129,12 @@ def get_reviewsYelp_API():
             
             
         else :
-            return reviews_business
+            reviews_business.to_parquet('/datalake/reviews_yelp.parquet')
+            return 'Extraccón realizada'
     
-    return reviews_business
+    reviews_business.to_parquet('/datalake/reviews_yelp.parquet')
+    return 'Extraccón realizada'
+
+
+extract_businesses()
+get_reviewsYelp_API()

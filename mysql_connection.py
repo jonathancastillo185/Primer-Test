@@ -18,7 +18,7 @@ def get_connection_mysql():
     try:
         return mysql.connect(host = 'servidorgrupo.cpfbmucjyznh.us-east-2.rds.amazonaws.com',
                          user = 'admin',
-                         password = '1533542415',
+                         password = mysql_key,
                          port=3306,
                          database='quantyle')
     except mysql.Error as e:
