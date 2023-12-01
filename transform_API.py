@@ -123,7 +123,7 @@ def trasnform_reviews_yelp():
         reivews_yelp: DataFrame trasnformado de reviews_yelp.
     """
     
-    reviews_yelp = pd.read_parquet('./datalake/reviews_yelp.parquet')
+    reivews_yelp = pd.read_parquet('./datalake/reviews_yelp.parquet')
     sid = SentimentIntensityAnalyzer()
     print(f'C: {reivews_yelp.columns} columnas')
     analisis = reivews_yelp['text'].apply(lambda x: sid.polarity_scores(x)["compound"])
@@ -156,7 +156,7 @@ def trasnform_reviews_yelp():
 
     columns= ['review_id','user_id','business_id','stars','sentiment','date','name',]
     reivews_yelp = reivews_yelp[columns]
-    reviews_yelp.to_parquet('./datalake/reviews_yelp_transform.parquet')
+    reivews_yelp.to_parquet('./datalake/reviews_yelp_transform.parquet')
     
     
     
