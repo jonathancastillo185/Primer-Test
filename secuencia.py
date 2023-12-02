@@ -3,11 +3,12 @@ from api_yelp import *
 from transform_API import *
 from etl_pipeline import *
 import time
+from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
 
-
+print(datetime.now())
 extract_businesses()
 get_reviewsYelp_API()
 print('Paso 1 extraccion, completo')
