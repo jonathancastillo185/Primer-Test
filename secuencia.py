@@ -7,6 +7,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
+
 extract_businesses()
 get_reviewsYelp_API()
 print('Paso 1 extraccion, completo')
@@ -20,3 +21,4 @@ time.sleep(60)
 yelp_ER()
 yelp_review_ER()
 print('Paso 3 carga, completo')
+
