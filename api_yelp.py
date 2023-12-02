@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 import sys
 import random
 from mysql_connection import *
+import warnings
+warnings.filterwarnings('ignore')
+
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
 api_key_yelp =  "h79T58XI7gUN5spPq_mPuYlfEenwxI7uvPhbeM0QQK3nLWlvQOLUgYVFEWnC7GsXb9f52ogfxBmfNVJH3iLJua8WzyTFIc1wG3AGk30aq8SvEVYUm2MwEGQyRllqZXYx" # Cargo la variable de entorno
 

@@ -1,6 +1,8 @@
 import pandas as pd
 from mysql_connection import *
 from transform_API import get_categories
+import warnings
+warnings.filterwarnings('ignore')
 
 def yelp_ER():
     

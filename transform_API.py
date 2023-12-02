@@ -2,7 +2,8 @@ import pandas as pd
 from dotenv import load_dotenv 
 from nltk.sentiment import SentimentIntensityAnalyzer
 import nltk
-
+import warnings
+warnings.filterwarnings('ignore')
 
 ##### BUSINES ###### 
 
