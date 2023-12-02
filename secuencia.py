@@ -3,6 +3,8 @@ from api_yelp import *
 from transform_API import *
 from etl_pipeline import *
 import time
+import warnings
+warnings.filterwarnings('ignore')
 
 
 extract_businesses()
