@@ -121,9 +121,6 @@ def yelp_review_ER():
 
     users_old = get_filtered_table('user_yelp', review_new_data['user_id'].unique().tolist())
     
-
-
-    print(users_old.shape[0])
     #Filtro solo las reviews donde su columna date sea mayor a la maxima existente en la base de datos.
     print(f'{review_new_data.shape[0]} reviews a ingestar')
     
@@ -174,8 +171,6 @@ def yelp_review_ER():
         'stars': mean_stars
     }).reset_index()
     
-    print(exist_user)
-    
     if not exist_user.empty:
         try:
             conexion = get_connection_mysql()
@@ -208,8 +203,7 @@ def yelp_review_ER():
             if conexion and conexion.open:
                 conexion.rollback()
                 conexion.close()
-            
-    print(review_new_data.shape[0]) 
+
     
     # Verificación de review_id antes de la inserción
     conexion = get_connection_mysql()

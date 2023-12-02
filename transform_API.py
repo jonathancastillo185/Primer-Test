@@ -125,7 +125,6 @@ def trasnform_reviews_yelp():
     
     reivews_yelp = pd.read_parquet('./datalake/reviews_yelp.parquet')
     sid = SentimentIntensityAnalyzer()
-    print(f'C: {reivews_yelp.columns} columnas')
     analisis = reivews_yelp['text'].apply(lambda x: sid.polarity_scores(x)["compound"])
     valorEstrellas = reivews_yelp['rating'] / 5 
     analisis += valorEstrellas

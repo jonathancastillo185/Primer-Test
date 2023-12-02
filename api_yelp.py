@@ -131,6 +131,7 @@ def get_reviewsYelp_API():
             return 'Extraccón realizada'
     
     reviews_business.to_parquet('./datalake/reviews_yelp.parquet')
+    
     return 'Extraccón realizada'
 
 
