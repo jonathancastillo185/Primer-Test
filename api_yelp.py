@@ -136,7 +136,3 @@ def get_reviewsYelp_API():
     reviews_business.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
     
     return 'Extraccón realizada'
-
-
-extract_businesses()
-get_reviewsYelp_API()

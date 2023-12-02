@@ -159,6 +159,3 @@ def trasnform_reviews_yelp():
     reivews_yelp.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp_transform.parquet')
     
     
-    
-transform_business()
-trasnform_reviews_yelp()

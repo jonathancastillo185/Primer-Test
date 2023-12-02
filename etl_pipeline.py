@@ -253,6 +253,3 @@ def yelp_review_ER():
             conexion.close()
 
             
-
-yelp_ER()
-yelp_review_ER()
