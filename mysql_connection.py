@@ -3,7 +3,7 @@ import pandas as pd
 from dotenv import load_dotenv 
 import os
 
-## Cargo las variables de entorno
+## Cargo las variables de entorno 
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
 mysql_key = '1533542415'
 ##################  MYSQL   ##################

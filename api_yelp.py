@@ -6,9 +6,9 @@ import sys
 import random
 from mysql_connection import *
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
-api_key_yelp =  "Ln6gcw24qn2x3RFJn0D89tGTBCRfrrpRrXqEp7y8fsaDFd2yjf7byiYcDirTF0VNr-bgsPE_kZPRqY0mpv7pXVd5KuVpzQC8cX5NzywiwBH1djTKvzQqNumm83JkZXYx" # Cargo la variable de entorno
+api_key_yelp =  "h79T58XI7gUN5spPq_mPuYlfEenwxI7uvPhbeM0QQK3nLWlvQOLUgYVFEWnC7GsXb9f52ogfxBmfNVJH3iLJua8WzyTFIc1wG3AGk30aq8SvEVYUm2MwEGQyRllqZXYx" # Cargo la variable de entorno
 
-
+ 
 # Funcion que consulta la API de yelp para obtener los locales por estado.    
 def get_business_API(state):
     """Esta funcion realiza una consulta a la API de yelp para obtener los restaurantes por  estado.
@@ -119,7 +119,7 @@ def get_reviewsYelp_API():
     iter = 0
     for business_id in business_ids_distinct_list:
         if business_id is None: continue
-        if iter <= 30:
+        if iter <= 10:
             iter += 1
             reviews = reviews_yelp_API(business_id)
             reviews['business_id'] = business_id

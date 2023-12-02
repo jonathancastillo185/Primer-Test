@@ -33,10 +33,8 @@ def yelp_ER():
         conexion.close()
         
         categories_origen = get_table('categories') # Cargo la tabla de categorias de la base de datos.    
-        max_id = categories_origen['categories_id']
+        max_id = categories_origen['categories_id'].max()
         categorias_new_data = get_categories(yelp_new_data.copy())
-        
-        categorias_new_data['categories'] = categorias_new_data['categories'].apply(lambda x: x.lower())
 
         #Agrego la categoria Restaurants a cada local
         
@@ -51,15 +49,16 @@ def yelp_ER():
         
         
         categorias_new = categorias_new_data[~(categorias_new_data['categories'].isin(categories_origen['name']))] # Selecciono las categorias que no estan en la DB
-        categorias_new['categories_id'] = list(range(max_id + 1, max_id + 1 + categorias_new.shape[0]))
+        categorias_new.loc[:, 'categories_id'] = range(max_id + 1, max_id + 1 + categorias_new.shape[0])
 
-        categories = categorias_new.drop_duplicates(subset='categories')['categories'].copy() # Elimino las categorias duplicadas y las convierto en lista de listas.
+
+        categories = categorias_new.drop_duplicates(subset='categories').copy() # Elimino las categorias duplicadas y las convierto en lista de listas.
         conexion = get_connection_mysql() 
         cursor = conexion.cursor()
         
         # Ingesto las nuevas categorias.
         consulta = "INSERT INTO categories  VALUES(%s,%s)"
-        cursor.executemany(consulta, categories.values.tolist())
+        cursor.executemany(consulta, categories[['categories_id','categories']].values.tolist())
         print(f'{categories.shape[0]} nuevas categorias ingestadas')
         conexion.commit()
         conexion.close()
@@ -71,6 +70,9 @@ def yelp_ER():
         categorias_yelp_new =  pd.merge(categories_acualizada,categorias_new_data,left_on='name',right_on='categories',how='inner')
         
         conexion = get_connection_mysql()
+        
+        categorias_yelp_new['categories_id'] = categorias_yelp_new['categories_id'].astype(int)
+        
         
         # Como business id ya es unico simplemente agrego las filas a la tabla cateogires_yelp
         try:
@@ -123,8 +125,11 @@ def yelp_review_ER():
     #Filtro solo las reviews donde su columna date sea mayor a la maxima existente en la base de datos.
     print(f'{review_new_data.shape[0]} reviews a ingestar')
     
-    review_new_data = review_new_data[(~review_new_data['review_id'].isin(reviews_yelp_origen['review_id']))]
+    review_new_data = pd.merge(review_new_data, reviews_yelp_origen[['review_id']], on='review_id', how='left', indicator=True).query('_merge == "left_only"').drop('_merge', axis=1)
+    
+    #review_new_data = review_new_data[(~review_new_data['review_id'].isin(reviews_yelp_origen['review_id']))]
     review_new_data['date'] = pd.to_datetime(review_new_data['date'])
+
 
     
     #### USERS ####  
@@ -203,19 +208,26 @@ def yelp_review_ER():
                 conexion.rollback()
                 conexion.close()
             
-    print(review_new_data.shape[0])
-    
+    print(review_new_data.shape[0]) 
     #### REVIEWS #####
     
     
     #print("Datos a insertar:", review_new_data.drop(columns=['name']).columns)
-    print(review_new_data)
+    print(f'Número de duplicados antes de eliminar: {review_new_data.duplicated(subset="review_id").sum()}')
+    print(review_new_data['review_id'].isnull().sum())
+    print(review_new_data['review_id'].unique())
+
     try:
         conexion= get_connection_mysql()
         cursor = conexion.cursor()
+        
+        review_new_data.drop_duplicates(subset='review_id',inplace=True)
+        
         consulta = "INSERT INTO reviews_yelp  VALUES(%s,%s,%s,%s,%s,%s)"
         cursor.executemany(consulta,review_new_data.drop(columns=['name']).values.tolist() )
+        
         print(f'{review_new_data.shape[0]} nuevas reviews')
+        
         conexion.commit()
         conexion.close()
     except Exception as e:

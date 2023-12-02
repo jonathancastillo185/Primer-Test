@@ -4,7 +4,7 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 import nltk
 
 
-##### BUSINES ######
+##### BUSINES ###### 
 
 from mysql_connection import * # Función para conectarme a la base de datos mysql
 
