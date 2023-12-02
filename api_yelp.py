@@ -9,7 +9,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
-api_key_yelp =  "Ln6gcw24qn2x3RFJn0D89tGTBCRfrrpRrXqEp7y8fsaDFd2yjf7byiYcDirTF0VNr-bgsPE_kZPRqY0mpv7pXVd5KuVpzQC8cX5NzywiwBH1djTKvzQqNumm83JkZXYx" # Cargo la variable de entorno
+api_key_yelp =  "5DIPr_h-AqFcwZuvZboWCR110mmQ6lXWLHYZKpkIiL_QKqguUurch2AwJwkmDk3ywshaUd_MXkYFf0-MG7i1hEd1hIi_8fSGeRU5M0d_Nuc4QwC7NP-rioH0O-lpZXYx" # Cargo la variable de entorno
 
  
 # Funcion que consulta la API de yelp para obtener los locales por estado.    
@@ -122,7 +122,7 @@ def get_reviewsYelp_API():
     iter = 0
     for business_id in business_ids_distinct_list:
         if business_id is None: continue
-        if iter <= 400:
+        if iter <= 100:
             iter += 1
             reviews = reviews_yelp_API(business_id)
             reviews['business_id'] = business_id
