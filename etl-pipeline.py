@@ -104,14 +104,16 @@ def yelp_ER():
 
 def yelp_review_ER():
     """
-        Esta funcion realiza el proceso de ETL completo respecto de la API de yelp para las reviews de restaurantes y las sube en la base datos mysql.
-        Para esto aplica las funciones:
-            * extract_businesses
-            * transform_business
-            * get_table
-            * mysql_get_connection
-    
+    Esta función realiza el proceso de ETL completo respecto de la API de Yelp para las reviews de restaurantes y las sube en la base de datos MySQL.
+    Para esto aplica las funciones:
+        * extract_businesses
+        * transform_business
+        * get_table
+        * mysql_get_connection
     """
+    # Leer datos de reviews desde el archivo parquet
+    
+    # Obtener las reviews existentes en la base de datos
     
     review_new_data = pd.read_parquet('./datalake/reviews_yelp_transform.parquet') # Hago las trasnformaciones sobre el dataframe.
     
@@ -133,7 +135,6 @@ def yelp_review_ER():
 
     
     #### USERS ####  
-    print(review_new_data.info())
 
     grouped_data = review_new_data.groupby('user_id') # Rrealizo el agrupamiento por usuarios y calculas las metricas.
     min_dates = grouped_data['date'].min()
@@ -209,29 +210,43 @@ def yelp_review_ER():
                 conexion.close()
             
     print(review_new_data.shape[0]) 
-    #### REVIEWS #####
     
-    
-    #print("Datos a insertar:", review_new_data.drop(columns=['name']).columns)
-    print(f'Número de duplicados antes de eliminar: {review_new_data.duplicated(subset="review_id").sum()}')
-    print(review_new_data['review_id'].isnull().sum())
-    print(review_new_data['review_id'].unique())
+    # Verificación de review_id antes de la inserción
+    conexion = get_connection_mysql()
+    cursor = conexion.cursor()
 
+    review_id_list = review_new_data['review_id'].tolist()
 
-            
-    conexion = None  # Declarar la variable de conexión fuera del bloque try-except-finally
+    # Crear una cadena con los review_id para la consulta SQL
+    review_id_str = ','.join([f"'{review_id}'" for review_id in review_id_list])
 
+    # Consulta SQL para verificar si los review_id existen en la tabla
+    consulta_existencia = f"SELECT review_id FROM reviews_yelp WHERE review_id IN ({review_id_str})"
+    cursor.execute(consulta_existencia)
+
+    # Obtener los review_id que existen en la base de datos
+    review_id_existente = [row[0] for row in cursor.fetchall()]
+
+    # Filtrar la lista original de review_id para obtener aquellos que no existen en la base de datos
+    review_id_no_existente = [review_id for review_id in review_id_list if review_id not in review_id_existente]
+
+    conexion.close()
+
+    # Filtrar el DataFrame para mantener solo los registros con review_id que no existen en la base de datos
+    review_new_data_filtered = review_new_data[review_new_data['review_id'].isin(review_id_no_existente)]
+
+    # Inserción de registros en la tabla reviews_yelp para los review_id que no existen
     try:
         conexion = get_connection_mysql()
         cursor = conexion.cursor()
-        
-        review_new_data.drop_duplicates(subset='review_id', inplace=True)
-        
+
+        review_new_data_filtered.drop_duplicates(subset='review_id', inplace=True)
+
         consulta = "INSERT INTO reviews_yelp VALUES(%s, %s, %s, %s, %s, %s)"
-        cursor.executemany(consulta, review_new_data.drop(columns=['name']).values.tolist())
-        
-        print(f'{review_new_data.shape[0]} nuevas reviews')
-        
+        cursor.executemany(consulta, review_new_data_filtered.drop(columns=['name']).values.tolist())
+
+        print(f'{review_new_data_filtered.shape[0]} nuevas reviews insertadas')
+
         conexion.commit()
     except Exception as e:
         print(f"Error al ejecutar la consulta SQL: {e}")
@@ -240,6 +255,8 @@ def yelp_review_ER():
     finally:
         if conexion:
             conexion.close()
+
             
+
 yelp_ER()
 yelp_review_ER()
