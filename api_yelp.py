@@ -11,7 +11,7 @@ api_key_yelp =  "h79T58XI7gUN5spPq_mPuYlfEenwxI7uvPhbeM0QQK3nLWlvQOLUgYVFEWnC7Gs
  
 # Funcion que consulta la API de yelp para obtener los locales por estado.    
 def get_business_API(state):
-    """Esta funcion realiza una consulta a la API de yelp para obtener los restaurantes por  estado.
+    """Esta funcion realiza una consulta a la API de yelp para obtener los restaurantes por estado.
 
     Args:
         state (string): Codigo de estado (Texas=TX) del estado requerido. 

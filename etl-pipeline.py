@@ -45,7 +45,7 @@ def yelp_ER():
         df_restaurants['categories'] = 'restaurants'
         categorias_new_data = pd.concat([categorias_new_data,df_restaurant])
         categorias_new_data = pd.concat([categorias_new_data,df_restaurants])
-        print(categorias_new_data.columns)
+
         
         
         categorias_new = categorias_new_data[~(categorias_new_data['categories'].isin(categories_origen['name']))] # Selecciono las categorias que no estan en la DB
@@ -217,29 +217,29 @@ def yelp_review_ER():
     print(review_new_data['review_id'].isnull().sum())
     print(review_new_data['review_id'].unique())
 
+
+            
+    conexion = None  # Declarar la variable de conexión fuera del bloque try-except-finally
+
     try:
-        conexion= get_connection_mysql()
+        conexion = get_connection_mysql()
         cursor = conexion.cursor()
         
-        review_new_data.drop_duplicates(subset='review_id',inplace=True)
+        review_new_data.drop_duplicates(subset='review_id', inplace=True)
         
-        consulta = "INSERT INTO reviews_yelp  VALUES(%s,%s,%s,%s,%s,%s)"
-        cursor.executemany(consulta,review_new_data.drop(columns=['name']).values.tolist() )
+        consulta = "INSERT INTO reviews_yelp VALUES(%s, %s, %s, %s, %s, %s)"
+        cursor.executemany(consulta, review_new_data.drop(columns=['name']).values.tolist())
         
         print(f'{review_new_data.shape[0]} nuevas reviews')
         
         conexion.commit()
-        conexion.close()
     except Exception as e:
         print(f"Error al ejecutar la consulta SQL: {e}")
-        # Aquí puedes agregar código adicional para manejar la excepción según tus necesidades.
-        # Por ejemplo, podrías hacer un rollback si es necesario.
+        if conexion:
+            conexion.rollback()
     finally:
-        # Este bloque se ejecutará siempre, asegurando que la conexión se cierre incluso en caso de excepción.
-        if conexion and conexion.open:
-            conexion.rollback()  # Hacer un rollback en caso de excepción antes de cerrar la conexión.
+        if conexion:
             conexion.close()
-            
             
 yelp_ER()
 yelp_review_ER()
