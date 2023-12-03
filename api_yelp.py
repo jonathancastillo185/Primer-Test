@@ -122,7 +122,7 @@ def get_reviewsYelp_API():
     iter = 0
     for business_id in business_ids_distinct_list:
         if business_id is None: continue
-        if iter <= 100:
+        if iter <= 400:
             iter += 1
             reviews = reviews_yelp_API(business_id)
             reviews['business_id'] = business_id
