@@ -9,7 +9,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 load_dotenv('.env') # Cargo la archivo donde esta la variable de entorno.
-api_key_yelp =  "h79T58XI7gUN5spPq_mPuYlfEenwxI7uvPhbeM0QQK3nLWlvQOLUgYVFEWnC7GsXb9f52ogfxBmfNVJH3iLJua8WzyTFIc1wG3AGk30aq8SvEVYUm2MwEGQyRllqZXYx" # Cargo la variable de entorno
+api_key_yelp =  "5DIPr_h-AqFcwZuvZboWCR110mmQ6lXWLHYZKpkIiL_QKqguUurch2AwJwkmDk3ywshaUd_MXkYFf0-MG7i1hEd1hIi_8fSGeRU5M0d_Nuc4QwC7NP-rioH0O-lpZXYx" # Cargo la variable de entorno
 
  
 # Funcion que consulta la API de yelp para obtener los locales por estado.    
