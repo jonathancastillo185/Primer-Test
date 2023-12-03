@@ -91,7 +91,7 @@ def reviews_yelp_API(business_id):
 
     response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
+    if response.status_code == 20:
         data = response.json()
         reviews_list = data.get('reviews', [])
         df = pd.json_normalize(reviews_list)

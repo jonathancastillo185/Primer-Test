@@ -1,0 +1,1 @@
+0 10 * * * python3 /home/ubuntu/Primer-Test/secuencia.py >> /home/ubuntu/registro.txt 2>&1
