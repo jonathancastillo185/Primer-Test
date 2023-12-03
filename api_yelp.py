@@ -91,7 +91,7 @@ def reviews_yelp_API(business_id):
 
     response = requests.get(url, headers=headers)
 
-    if response.status_code == 10:
+    if response.status_code == 200:
         data = response.json()
         reviews_list = data.get('reviews', [])
         df = pd.json_normalize(reviews_list)
@@ -122,7 +122,7 @@ def get_reviewsYelp_API():
     iter = 0
     for business_id in business_ids_distinct_list:
         if business_id is None: continue
-        if iter <= 400:
+        if iter <= 10:
             iter += 1
             reviews = reviews_yelp_API(business_id)
             reviews['business_id'] = business_id
