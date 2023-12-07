@@ -20,6 +20,8 @@ get_reviewsYelp_API()
 
 print('Completo')
 
+time.sleep(3)
+
 print('-'*10)
 print('-Paso 2 transformacion')
 print('-'*10)
@@ -28,6 +30,8 @@ transform_business()
 trasnform_reviews_yelp()
 
 print('Completo')
+
+time.sleep(3)
 
 print('-'*10)
 print('-Paso 3 carga, completo')

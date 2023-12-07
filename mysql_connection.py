@@ -16,7 +16,7 @@ def get_connection_mysql():
     """
     
     try:
-        return mysql.connect(host = 'quantyle.cxqm3ttktdpq.us-east-2.rds.amazonaws.com',
+        return mysql.connect(host = 'servidorgrupo.cpfbmucjyznh.us-east-2.rds.amazonaws.com',
                          user = 'admin',
                          password = mysql_key,
                          port=3306,

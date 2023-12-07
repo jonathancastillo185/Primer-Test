@@ -67,7 +67,7 @@ def extract_businesses():
     for state in ['CA','FL','NJ','IL']:
         businesses = get_business_API(state)
         yelp_bussines = pd.concat([businesses,yelp_bussines])
-    yelp_bussines.to_parquet('/home/ubuntu/Primer-Test/datalake/business_API.parquet')
+    yelp_bussines.to_parquet(r'datalake\business_API.parquet')
 
 
 
@@ -130,9 +130,9 @@ def get_reviewsYelp_API():
             
             
         else :
-            reviews_business.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
+            reviews_business.to_parquet(r'datalake\reviews_yelp.parquet')
             return 'Extraccón realizada'
     
-    reviews_business.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
+    reviews_business.to_parquet(r'datalake\reviews_yelp.parquet')
     
     return 'Extraccón realizada'
