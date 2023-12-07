@@ -157,8 +157,8 @@ def trasnform_reviews_yelp():
     reivews_yelp.loc[:,'stars'] = round(reivews_yelp['stars'],2)
     reivews_yelp.loc[:,'sentiment'] = round(reivews_yelp['sentiment'],2)
     reivews_yelp['date'] = pd.to_datetime(reivews_yelp['date']).dt.strftime('%Y-%m-%d %H:%M:%S')
- 
-
+    reivews_yelp = reivews_yelp[reivews_yelp['date'].dt.year >= 2015]
+    
 
     columns= ['review_id','user_id','business_id','stars','sentiment','date','name',]
     reivews_yelp = reivews_yelp[columns]
