@@ -75,7 +75,7 @@ def yelp_ER():
         
         categorias_yelp_new['categories_id'] = categorias_yelp_new['categories_id'].astype(int)
         
-        
+        print(categorias_yelp_new)
         # Como business id ya es unico simplemente agrego las filas a la tabla cateogires_yelp
         try:
             cursor = conexion.cursor()
@@ -152,6 +152,7 @@ def yelp_review_ER():
     new_users = users[~(users['user_id'].isin(users_old['user_id']))]
     new_users['influence'] = 0
     
+    print(users.head())
     
      #### DATAFRAME CON LOS USUARIOS EXISTENTES
     #exist_user = users[(users['user_id'].isin(users_old['user_id']))] # Usuarios existentes
@@ -242,7 +243,7 @@ def yelp_review_ER():
         cursor.executemany(consulta, review_new_data_filtered.drop(columns=['name']).values.tolist())
 
         print(f'{review_new_data_filtered.shape[0]} nuevas reviews insertadas')
-
+        print(review_new_data_filtered.head())
         conexion.commit()
     except Exception as e:
         print(f"Error al ejecutar la consulta SQL: {e}")

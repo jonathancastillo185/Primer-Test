@@ -44,6 +44,7 @@ def get_business_API(state):
         # Convierte el JSON en un DataFrame de pandas
         #df = pd.json_normalize(data)
         businesses = pd.json_normalize(data['businesses'])
+        print(businesses.head())
         return businesses
     else:
         print(f'Error en la solicitud. Código de estado: {response.status_code}')
@@ -96,7 +97,7 @@ def reviews_yelp_API(business_id):
         reviews_list = data.get('reviews', [])
         df = pd.json_normalize(reviews_list)
        
-        
+        print(df.head())
         return  df
 
     else:
@@ -132,7 +133,7 @@ def get_reviewsYelp_API():
         else :
             reviews_business.to_parquet(r'datalake\reviews_yelp.parquet')
             return 'Extraccón realizada'
-    
+    print(reviews_business.head())
     reviews_business.to_parquet(r'datalake\reviews_yelp.parquet')
     
     return 'Extraccón realizada'

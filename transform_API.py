@@ -64,6 +64,8 @@ def transform_business():
         yelp_bussines.loc[:, 'longitude'] = round(yelp_bussines['longitude'], 8)
         yelp_bussines.loc[:, 'stars'] = round(yelp_bussines['stars'], 2)
         
+
+        print(yelp_bussines.head())
         
         yelp_bussines.to_parquet(r'datalake\business_trasnform.parquet')
     else:
@@ -90,7 +92,11 @@ def get_categories(df):
     # Crear un nuevo DataFrame para la tabla de categorías
     categorias_new_data = pd.DataFrame(categories_data)
     # Normalizo a minusculas las categorias
-    categorias_new_data['categories'] = categorias_new_data['categories'].apply(lambda x: x.lower()) 
+    categorias_new_data['categories'] = categorias_new_data['categories'].apply(lambda x: x.lower())
+    
+
+    print(categorias_new_data.head())
+    
     return categorias_new_data
 
 
@@ -156,6 +162,10 @@ def trasnform_reviews_yelp():
 
     columns= ['review_id','user_id','business_id','stars','sentiment','date','name',]
     reivews_yelp = reivews_yelp[columns]
+    
+
+    print(reivews_yelp.head())
+    
     reivews_yelp.to_parquet(r'datalake\reviews_yelp_transform.parquet')
     
     
