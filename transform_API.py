@@ -40,7 +40,7 @@ def transform_business():
         pd.DataFrame: DataFrame restaurantes.
     """
     
-    yelp_bussines = pd.read_parquet(r'datalake\business_API.parquet')
+    yelp_bussines = pd.read_parquet('/home/ubuntu/Primer-Test/datalake/business_API.parquet')
     
     
     if yelp_bussines is not None and 'categories' in yelp_bussines.columns:
@@ -67,7 +67,7 @@ def transform_business():
 
         print(yelp_bussines.head())
         
-        yelp_bussines.to_parquet(r'datalake\business_trasnform.parquet')
+        yelp_bussines.to_parquet('/home/ubuntu/Primer-Test/datalake/business_trasnform.parquet')
     else:
         return 'No se cargaron nuevos datos.'
     
@@ -130,7 +130,7 @@ def trasnform_reviews_yelp():
         reivews_yelp: DataFrame trasnformado de reviews_yelp.
     """
     
-    reivews_yelp = pd.read_parquet(r'datalake\reviews_yelp.parquet')
+    reivews_yelp = pd.read_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
     sid = SentimentIntensityAnalyzer()
     analisis = reivews_yelp['text'].apply(lambda x: sid.polarity_scores(x)["compound"])
     valorEstrellas = reivews_yelp['rating'] / 5 
@@ -166,6 +166,6 @@ def trasnform_reviews_yelp():
 
     print(reivews_yelp.head())
     
-    reivews_yelp.to_parquet(r'datalake\reviews_yelp_transform.parquet')
+    reivews_yelp.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp_transform.parquet')
     
     

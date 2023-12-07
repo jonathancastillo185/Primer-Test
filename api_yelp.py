@@ -44,7 +44,6 @@ def get_business_API(state):
         # Convierte el JSON en un DataFrame de pandas
         #df = pd.json_normalize(data)
         businesses = pd.json_normalize(data['businesses'])
-        print(businesses.head())
         return businesses
     else:
         print(f'Error en la solicitud. Código de estado: {response.status_code}')
@@ -68,7 +67,7 @@ def extract_businesses():
     for state in ['CA','FL','NJ','IL']:
         businesses = get_business_API(state)
         yelp_bussines = pd.concat([businesses,yelp_bussines])
-    yelp_bussines.to_parquet(r'datalake\business_API.parquet')
+    yelp_bussines.to_parquet('/home/ubuntu/Primer-Test/datalake/business_API.parquet')
 
 
 
@@ -131,9 +130,15 @@ def get_reviewsYelp_API():
             
             
         else :
-            reviews_business.to_parquet(r'datalake\reviews_yelp.parquet')
+            reviews['time_created'] = pd.to_datetime(reviews['time_created'])
+            reviews = reviews[reviews['time_created'].dt.year >= 2015]
+            reviews_business.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
+            print(reviews_business.head())
             return 'Extraccón realizada'
+        
+    reviews = reviews[reviews['time_created'].dt.year >= 2015]
+    reviews_business.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
     print(reviews_business.head())
-    reviews_business.to_parquet(r'datalake\reviews_yelp.parquet')
+    reviews_business.to_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp.parquet')
     
     return 'Extraccón realizada'

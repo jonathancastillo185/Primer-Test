@@ -17,7 +17,7 @@ def yelp_ER():
     
     """
     
-    yelp_new_data = pd.read_parquet(r'datalake\business_trasnform.parquet') # Realizo las trasnformaciones necesarias para que los datos esten limpios
+    yelp_new_data = pd.read_parquet('/home/ubuntu/Primer-Test/datalake/business_trasnform.parquet') # Realizo las trasnformaciones necesarias para que los datos esten limpios
 
     yelp_origen = get_table('business_yelp') # Cargo de la base de datos la tabla de yelp en un dataframe
     
@@ -117,7 +117,7 @@ def yelp_review_ER():
     
     # Obtener las reviews existentes en la base de datos
     
-    review_new_data = pd.read_parquet(r'datalake\reviews_yelp_transform.parquet') # Hago las trasnformaciones sobre el dataframe.
+    review_new_data = pd.read_parquet('/home/ubuntu/Primer-Test/datalake/reviews_yelp_transform.parquet') # Hago las trasnformaciones sobre el dataframe.
     
     reviews_yelp_origen = get_review_yelp('reviews_yelp') # Consulto la tabla las ultimas resenas
 
