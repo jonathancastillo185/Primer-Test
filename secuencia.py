@@ -15,12 +15,14 @@ print('-'*50)
 print('-Paso 1 extraccion')
 print('-'*50)
 
+time.sleep(3)
+
 extract_businesses()
 get_reviewsYelp_API()
 
 print('Completo')
 
-time.sleep(3)
+time.sleep(5)
 
 print('-'*50)
 print('-Paso 2 transformacion')
@@ -35,7 +37,7 @@ print('Completo')
 print('-'*50)
 
 
-time.sleep(3)
+time.sleep(5)
 
 print('-'*50)
 print('-Paso 3 carga, completo')
