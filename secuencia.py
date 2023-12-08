@@ -20,7 +20,11 @@ time.sleep(3)
 extract_businesses()
 get_reviewsYelp_API()
 
+
+print('-'*50)
 print('Completo')
+print('-'*50)
+
 
 time.sleep(5)
 
