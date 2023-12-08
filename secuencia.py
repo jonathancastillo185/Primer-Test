@@ -7,9 +7,12 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
+
 print('-'*50)
 print(datetime.now())
 print('-'*50)
+
+time.sleep(3)
 
 print('-'*50)
 print('-Paso 1 extraccion')
@@ -54,7 +57,9 @@ time.sleep(3)
 yelp_ER()
 yelp_review_ER()
 
+time.sleep(5)
 
 print('-'*50)
 print('Carga Automática de Datos: API -> RDS')
+print('Completo')
 print('-'*50)
