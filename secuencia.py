@@ -32,6 +32,8 @@ print('-'*50)
 print('-Paso 2 transformacion')
 print('-'*50)
 
+time.sleep(3)
+
 transform_business()
 trasnform_reviews_yelp()
 
@@ -44,13 +46,15 @@ print('-'*50)
 time.sleep(5)
 
 print('-'*50)
-print('-Paso 3 carga, completo')
+print('-Paso 3 carga')
 print('-'*50)
+
+time.sleep(3)
 
 yelp_ER()
 yelp_review_ER()
 
 
 print('-'*50)
-print('Completo')
+print('Carga Automática de Datos: API -> RDS')
 print('-'*50)
