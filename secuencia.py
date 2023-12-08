@@ -7,13 +7,13 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
-print('-'*40)
+print('-'*50)
 print(datetime.now())
-print('-'*40)
+print('-'*50)
 
-print('-'*10)
+print('-'*50)
 print('-Paso 1 extraccion')
-print('-'*10)
+print('-'*50)
 
 extract_businesses()
 get_reviewsYelp_API()
@@ -22,23 +22,29 @@ print('Completo')
 
 time.sleep(3)
 
-print('-'*10)
+print('-'*50)
 print('-Paso 2 transformacion')
-print('-'*10)
+print('-'*50)
 
 transform_business()
 trasnform_reviews_yelp()
 
+
+print('-'*50)
 print('Completo')
+print('-'*50)
+
 
 time.sleep(3)
 
-print('-'*10)
+print('-'*50)
 print('-Paso 3 carga, completo')
-print('-'*10)
+print('-'*50)
 
 yelp_ER()
 yelp_review_ER()
 
-print('Completo')
 
+print('-'*50)
+print('Completo')
+print('-'*50)
